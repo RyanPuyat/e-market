@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "PRISMA_CLIENT_ENGINE_TYPE=vercel-s-next prisma generate"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "-": "^0.0.1",
