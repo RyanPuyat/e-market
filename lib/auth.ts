@@ -52,9 +52,12 @@ const authConfig = {
     }),
   ],
   callbacks: {
-    async session({ session, user, trigger, token }: any) {
+    async session({ session, user, trigger, token }) {
       //Set the User Id from the token
-      session.user.id = token.sub;
+      // session.user.id = token.sub;
+      if (token.sub) {
+        session.user.id = token.sub; // This is now safe: string is assigned to (string | undefined)
+      }
 
       //If there is an update, set the user name
       if (trigger === 'update') {
