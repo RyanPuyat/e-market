@@ -8,13 +8,19 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet';
-import { EllipsisVertical, ShoppingCartIcon, UserIcon } from 'lucide-react';
+import { EllipsisVertical, ShoppingCartIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ModeToggle from './mode-toggle';
 import Link from 'next/link';
 import { useMediaQuery } from '@/components/shared/header/useMediaQuery';
+import UserButton from './user-button';
+import { Session } from 'next-auth';
 
-export default function MobileSheetMenu() {
+export default function MobileSheetMenu({
+  session,
+}: {
+  session: Session | null;
+}) {
   const [open, setOpen] = useState(false);
   const isMdUp = useMediaQuery('(min-width: 768px)');
 
@@ -35,11 +41,7 @@ export default function MobileSheetMenu() {
             <ShoppingCartIcon /> Cart
           </Link>
         </Button>
-        <Button asChild className="ml-2">
-          <Link href="/signin">
-            <UserIcon /> Sign In
-          </Link>
-        </Button>
+        <UserButton session={session} />
         <SheetDescription />
       </SheetContent>
     </Sheet>

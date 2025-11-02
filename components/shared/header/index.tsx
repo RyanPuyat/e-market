@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { APP_NAME } from '@/lib/constants';
-import Menu from './menu';
+// import Menu from './menu';
+import MenuWrapper from './menu-wrapper';
 
 function Header() {
   return (
@@ -18,7 +19,7 @@ function Header() {
             />
           </Link>
         </div>
-        <Menu />
+        <MenuWrapper />
       </div>
     </header>
   );

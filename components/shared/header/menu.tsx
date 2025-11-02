@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button';
 import ModeToggle from './mode-toggle';
 import Link from 'next/link';
-import { ShoppingCartIcon, UserIcon } from 'lucide-react';
-import MobileSheetMenu from './sheetMenu';
+import { ShoppingCartIcon } from 'lucide-react';
+import MobileSheetMenu from './sheet-menu';
+import UserButton from './user-button';
+import { Session } from 'next-auth';
 
-function Menu() {
+function Menu({ session }: { session: Session | null }) {
   return (
     <div className="flex justify-end gap-3">
       <nav className="hidden md:flex w-full max-w-xs gap-1">
@@ -14,14 +16,10 @@ function Menu() {
             <ShoppingCartIcon /> Cart
           </Link>
         </Button>
-        <Button asChild>
-          <Link href="/sign-in">
-            <UserIcon /> Sign In
-          </Link>
-        </Button>
+        <UserButton session={session} />
       </nav>
       <nav className="md:hidden">
-        <MobileSheetMenu />
+        <MobileSheetMenu session={session} />
       </nav>
     </div>
   );
