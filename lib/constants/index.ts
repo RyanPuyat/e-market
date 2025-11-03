@@ -1,3 +1,5 @@
+import { email } from 'zod';
+
 export const APP_SERVER_URL = process.env.NEXT_PUBLIC_APP_SERVER_URL;
 export const APP_NAME = 'Emarket';
 export const APP_DESCRIPTION = 'A modern ecommerce website';
@@ -7,4 +9,11 @@ export const LATEST_PRODUCTS_LIMIT =
 export const signInDefaultValues = {
   email: '',
   password: '',
+};
+
+export const signUpDefaultValues = {
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
 };
