@@ -40,7 +40,7 @@ function SignUpForm() {
             id="name"
             name="name"
             type="name"
-            required
+            // required
             autoComplete="name"
             defaultValue={signUpDefaultValues.name}
           />
@@ -52,8 +52,8 @@ function SignUpForm() {
           <Input
             id="email"
             name="email"
-            type="email"
-            required
+            type="name"
+            // required
             autoComplete="email"
             defaultValue={signUpDefaultValues.email}
           />
