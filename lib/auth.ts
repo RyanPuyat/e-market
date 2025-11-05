@@ -51,13 +51,13 @@ const authConfig = {
       },
     }),
   ],
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   callbacks: {
-    async session({ session, user, trigger, token }) {
+    async session({ session, user, trigger, token }: any) {
       //Set the User Id from the token
-      // session.user.id = token.sub;
-      if (token.sub) {
-        session.user.id = token.sub; // This is now safe: string is assigned to (string | undefined)
-      }
+      session.user.id = token.sub;
+      session.user.role = token.role;
+      session.user.name = token.name;
 
       //If there is an update, set the user name
       if (trigger === 'update') {
@@ -65,7 +65,25 @@ const authConfig = {
       }
       return session;
     },
+
+    async jwt({ session, user, trigger, token }: any) {
+      if (user) {
+        token.role = user.role;
+        //If user has no name the use the email
+        if (user.name === 'NO_NAME') {
+          token.name = user.email!.split('@')[0];
+
+          //Update database to reflect the token name
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          });
+        }
+      }
+      return token;
+    },
   },
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 } satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
