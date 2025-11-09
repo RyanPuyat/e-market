@@ -68,7 +68,7 @@ const authConfig = {
       return session;
     },
 
-    async jwt({ session, user, trigger, token }: any) {
+    async jwt({ user, token }: any) {
       if (user) {
         token.role = user.role;
         //If user has no name the use the email
@@ -85,7 +85,7 @@ const authConfig = {
       return token;
     },
 
-    async authorized({ request, auth }: any) {
+    async authorized({ request }: any) {
       //Check for session cart cookie
       if (!request.cookies.get('sessionCartId')) {
         //Generate new session cartId cookie

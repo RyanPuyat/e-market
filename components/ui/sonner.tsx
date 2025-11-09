@@ -12,7 +12,6 @@ import { Toaster as Sonner, type ToasterProps } from 'sonner';
 import { Button } from '@/components/ui/button';
 
 export function ToastAction({
-  altText,
   ...props
 }: React.ComponentProps<typeof Button> & { altText?: string }) {
   return <Button {...props} />;
