@@ -5,6 +5,7 @@ import { getProductBySlug } from '@/lib/actions/product.actions';
 import { notFound } from 'next/navigation';
 import ProductPrice from '@/components/shared/product/product-price';
 import ProductImages from '@/components/shared/product/productimages';
+import AddToCart from '@/components/shared/product/add-to-cart';
 
 async function ProductDetailsPage(props: {
   params: Promise<{ slug: string }>;
@@ -63,7 +64,17 @@ async function ProductDetailsPage(props: {
                 </div>
                 {product.stock > 0 && (
                   <div className="flex-center">
-                    <Button className="w-full">Add to Cart</Button>
+                    {/* <Button className="w-full">Add to Cart</Button> */}
+                    <AddToCart
+                      item={{
+                        productId: product.id,
+                        name: product.name,
+                        slug: product.slug,
+                        price: product.price,
+                        qty: 1,
+                        image: product.images![0],
+                      }}
+                    />
                   </div>
                 )}
               </CardContent>
