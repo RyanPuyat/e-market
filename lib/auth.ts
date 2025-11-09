@@ -2,7 +2,6 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/db/prisma';
-import { compare } from '@/lib/encrypt';
 import type { NextAuthConfig } from 'next-auth';
 import { compareSync } from 'bcrypt-ts-edge';
 // import { cookies } from 'next/headers';
