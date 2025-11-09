@@ -38,3 +38,14 @@ export function formatError(error: any) {
   }
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
+
+//Round number to 2 decimal places
+export function round2(value: number | string): number {
+  const num = typeof value === 'string' ? Number(value) : value;
+
+  if (isNaN(num)) {
+    throw new Error('Value is not a valid number');
+  }
+
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}

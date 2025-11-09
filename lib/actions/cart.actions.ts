@@ -2,10 +2,30 @@
 
 import { CartItem } from '@/types';
 import { cookies } from 'next/headers';
-import { convertToPlainObject, formatError } from '../utils';
+import { convertToPlainObject, formatError, round2 } from '../utils';
 import { auth } from '../auth';
 import { prisma } from '@/db/prisma';
-import { cartItemSchema } from '../validators';
+import { cartItemSchema, insertCartSchema } from '../validators';
+import { revalidatePath } from 'next/cache';
+
+//Calculate cart Prices
+
+function calcPrice(items: CartItem[]) {
+  const itemsPrice = round2(
+    items.reduce((acc, item) => acc + Number(item.price ?? 0) * item.qty, 0)
+  );
+  const shippingPrice = round2(itemsPrice > 100 ? 0 : 10);
+  const taxPrice = round2(itemsPrice * 0.15);
+
+  const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
+
+  return {
+    itemsPrice: itemsPrice?.toFixed(2),
+    shippingPrice: shippingPrice?.toFixed(2),
+    taxPrice: taxPrice?.toFixed(2),
+    totalPrice: totalPrice?.toFixed(2),
+  };
+}
 
 export async function addItemToCart(data: CartItem) {
   try {
@@ -27,17 +47,27 @@ export async function addItemToCart(data: CartItem) {
     const product = await prisma.product.findFirst({
       where: { id: item.productId },
     });
-    //Testing
-    console.log({
-      SessionCartId: sessionCartId,
-      UserId: userId,
-      itemRequested: item,
-      productFound: product,
-    });
-    return {
-      success: true,
-      message: 'Item added to cart',
-    };
+    if (!product) throw new Error('Product not found');
+    if (!cart) {
+      //Create new cart object
+      const newCart = insertCartSchema.parse({
+        userId: userId,
+        items: [item],
+        sessionCartId: sessionCartId,
+        ...calcPrice([item]),
+      });
+      //Add to database
+      await prisma.cart.create({
+        data: newCart,
+      });
+      //Revalidate product page
+      revalidatePath(`/product/${product.slug}`);
+      return {
+        success: true,
+        message: 'Item added to cart',
+      };
+    } else {
+    }
   } catch (error) {
     return {
       success: false,
