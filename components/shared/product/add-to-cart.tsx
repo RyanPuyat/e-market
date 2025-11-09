@@ -14,8 +14,8 @@ function AddToCart({ item }: { item: CartItem }) {
   async function handleAddToCart() {
     const res = await addItemToCart(item);
 
-    if (!res.success) {
-      toast.error(res.message);
+    if (!res?.success) {
+      toast.error(res?.message);
       return;
     }
 
