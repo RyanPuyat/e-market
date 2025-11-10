@@ -20,7 +20,7 @@ function AddToCart({ item }: { item: CartItem }) {
     }
 
     //Handle success add to cart
-    toast(`${item.name} added to cart`, {
+    toast(res.message, {
       action: (
         <ToastAction
           className="bg-primary text-white hover:bg-gray-800"
