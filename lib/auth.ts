@@ -4,7 +4,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/db/prisma';
 import type { NextAuthConfig } from 'next-auth';
 import { compareSync } from 'bcrypt-ts-edge';
-// import { cookies } from 'next/headers';
+import { cookies } from 'next/headers';
 // import { NextResponse } from 'next/server';
 
 const authConfig = {
@@ -68,8 +68,9 @@ const authConfig = {
       return session;
     },
 
-    async jwt({ user, token }: any) {
+    async jwt({ user, token, trigger }: any) {
       if (user) {
+        token.id = user.id;
         token.role = user.role;
         //If user has no name the use the email
         if (user.name === 'NO_NAME') {
@@ -81,9 +82,34 @@ const authConfig = {
             data: { name: token.name },
           });
         }
+        if (trigger === 'signIn' || trigger === 'signUp') {
+          const cookiesObject = await cookies();
+          const sessionCartId = cookiesObject.get('sessionCartId')?.value;
+
+          if (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: { sessionCartId },
+            });
+
+            if (sessionCart) {
+              //Delete current user cart
+              await prisma.cart.deleteMany({
+                where: { userId: user.id },
+              });
+
+              //Assign cart
+
+              await prisma.cart.update({
+                where: { id: sessionCart.id },
+                data: { userId: user.id },
+              });
+            }
+          }
+        }
       }
       return token;
     },
+    /* eslint-enable @typescript-eslint/no-explicit-any */
 
     // async authorized({ request }: any) {
     //   //Check for session cart cookie

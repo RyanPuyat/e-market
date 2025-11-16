@@ -46,7 +46,7 @@ async function SignInPage(props: {
           <CardDescription className="text-center">
             Sign in to your account
           </CardDescription>
-          <CardContent className="sapce-y-4">
+          <CardContent className="space-y-4">
             <SignInForm />
           </CardContent>
         </CardHeader>

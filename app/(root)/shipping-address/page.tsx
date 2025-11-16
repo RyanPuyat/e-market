@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { ShippingAddress } from '@/types';
 import { getUserById } from '@/lib/actions/user.actions';
 import ShippingAddressForm from '@/components/shared/cart/shipping-address-form';
+import CheckoutSteps from '@/components/shared/cart/checkout-steps';
 
 export const metadata: Metadata = {
   title: 'Shipping Address',
@@ -19,13 +20,14 @@ async function ShippingAddressPage() {
 
   const userId = session?.user?.id;
 
-  if (!userId) throw new Error('No user ID');
+  if (!userId) redirect('/sign-in');
 
   const user = await getUserById(userId);
 
   return (
     <div>
-      <ShippingAddressForm />
+      <CheckoutSteps current={1} />
+      <ShippingAddressForm address={user.address as ShippingAddress} />
     </div>
   );
 }
