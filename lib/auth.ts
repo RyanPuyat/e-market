@@ -112,6 +112,16 @@ const authConfig = {
     /* eslint-enable @typescript-eslint/no-explicit-any */
 
     // async authorized({ request }: any) {
+    //Array of regex patterns of paths we want to protect
+    //   const protectedPaths = [
+    //   /\/shipping-address/,
+    //   /\/payment-method/,
+    //   /\/place-order/,
+    //   /\/profile/,
+    //   /\/user\/(.*)/,
+    //   /\/order\/(.*)/,
+    //   /\/admin/,
+    // ]
     //   //Check for session cart cookie
     //   if (!request.cookies.get('sessionCartId')) {
     //     //Generate new session cartId cookie

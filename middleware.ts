@@ -1,7 +1,18 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { isAuthenticated } from '@/lib/auth-check';
 
-export function middleware(request: NextRequest) {
+const protectedRoutes = [
+  /\/shipping-address/,
+  /\/payment-method/,
+  /\/place-order/,
+  /\/profile/,
+  /\/user\/(.*)/,
+  /\/order\/(.*)/,
+  /\/admin/,
+];
+
+export async function middleware(request: NextRequest) {
   const sessionCartId = request.cookies.get('sessionCartId')?.value;
 
   if (!sessionCartId) {
@@ -17,4 +28,13 @@ export function middleware(request: NextRequest) {
 
     return response;
   }
+  const isProtected = protectedRoutes.some((route) =>
+    route.test(request.nextUrl.pathname)
+  );
+
+  if (isProtected && !(await isAuthenticated(request))) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
+  }
+
+  return NextResponse.next();
 }
