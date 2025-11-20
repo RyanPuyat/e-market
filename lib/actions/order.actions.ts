@@ -107,5 +107,7 @@ export async function getOrderById(orderId: string) {
     },
   });
 
+  if (!data) return null;
+
   return convertToPlainObject(data);
 }
