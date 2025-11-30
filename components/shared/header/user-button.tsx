@@ -50,9 +50,22 @@ export default function UserButton({ session }: { session: Session | null }) {
               </div>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuItem asChild>
-            <Link href="/profile">Profile</Link>
+
+          <DropdownMenuItem>
+            <Link href="/user/profile" className="w-full">
+              User Profile
+            </Link>
           </DropdownMenuItem>
+
+          <DropdownMenuItem>
+            <Link href="/user/orders" className="w-full">
+              Order History
+            </Link>
+          </DropdownMenuItem>
+
+          {/* <DropdownMenuItem asChild>
+            <Link href="/profile">Profile</Link>
+          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={() => signOutUser()}>
             Sign Out
           </DropdownMenuItem>

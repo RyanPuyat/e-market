@@ -103,7 +103,7 @@ function OrderDetailsTable({
               <p className="mb-2">
                 {(shippingAddress.postalCode, shippingAddress.country)}
               </p>
-              {isPaid ? (
+              {isDelivered ? (
                 <Badge variant="secondary">
                   Paid at {formatDateTime(deliveredAt!).dateTime}
                 </Badge>

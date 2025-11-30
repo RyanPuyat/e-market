@@ -1,4 +1,3 @@
-import Menu from '@/components/shared/header/menu';
 import MenuWrapper from '@/components/shared/header/menu-wrapper';
 import { APP_NAME } from '@/lib/constants';
 import Image from 'next/image';
