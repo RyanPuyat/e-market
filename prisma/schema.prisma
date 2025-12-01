@@ -1,13 +1,13 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider      = "prisma-client-js"
   // output          = "../lib/generated/prisma"
-  previewFeatures = ["driverAdapters"]
-  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
+  // previewFeatures = ["driverAdapters"]
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
 }
 
 model Product {
