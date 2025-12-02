@@ -68,7 +68,7 @@ const authConfig = {
       return session;
     },
 
-    async jwt({ user, token, trigger }: any) {
+    async jwt({ user, token, trigger, session }: any) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
@@ -106,6 +106,10 @@ const authConfig = {
             }
           }
         }
+      }
+      //Handle session updates
+      if (session?.user?.name && trigger === 'update') {
+        token.name = session.user.name;
       }
       return token;
     },

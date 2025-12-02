@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { updateProfile } from '@/lib/actions/user.actions';
 
 function ProfileForm() {
   const { data: session, update } = useSession();
@@ -26,12 +27,25 @@ function ProfileForm() {
     },
   });
 
-  // if (!res.success) {
-  //   toast.error(res.message);
-  // }
+  const onSubmit = async (values: z.infer<typeof updateProfileSchema>) => {
+    const res = await updateProfile(values);
 
-  const onSubmit = () => {
-    return;
+    if (!res.success) {
+      toast.error(res.message);
+    }
+
+    const newSession = {
+      ...session,
+      user: {
+        ...session?.user,
+        name: values.name,
+      },
+    };
+
+    if (res.success) {
+      await update(newSession);
+      toast.success(res.message);
+    }
   };
 
   return (

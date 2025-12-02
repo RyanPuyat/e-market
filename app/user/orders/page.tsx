@@ -65,7 +65,7 @@ async function OrderPage(props: { searchParams: Promise<{ page: string }> }) {
                 ))}
               </TableBody>
             </Table>
-            {orders.totalPages >= 1 && (
+            {orders.totalPages > 1 && (
               <Pagination
                 page={Number(page) || 1}
                 totalPages={orders?.totalPages}
