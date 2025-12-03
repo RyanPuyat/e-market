@@ -63,9 +63,14 @@ export default function UserButton({ session }: { session: Session | null }) {
             </Link>
           </DropdownMenuItem>
 
-          {/* <DropdownMenuItem asChild>
-            <Link href="/profile">Profile</Link>
-          </DropdownMenuItem> */}
+          {session?.user?.role === 'admin' && (
+            <DropdownMenuItem>
+              <Link href="/admin/overview" className="w-full">
+                Admin
+              </Link>
+            </DropdownMenuItem>
+          )}
+
           <DropdownMenuItem onClick={() => signOutUser()}>
             Sign Out
           </DropdownMenuItem>
