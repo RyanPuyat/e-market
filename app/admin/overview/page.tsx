@@ -8,23 +8,19 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { getOrderSummary } from '@/lib/actions/order.actions';
-import { auth } from '@/lib/auth';
 import { formatCurrency, formatDateTime, formatNumber } from '@/lib/utils';
 import { BadgeDollarSign, Barcode, CreditCard, Users } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Charts from './charts';
+import { requireAdmin } from '@/lib/auth-guard';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
 };
 
 async function AdminOverviewPAge() {
-  const session = await auth();
-
-  if (session?.user?.role !== 'admin') {
-    throw new Error('User not authorized');
-  }
+  await requireAdmin();
 
   const summary = await getOrderSummary();
 
