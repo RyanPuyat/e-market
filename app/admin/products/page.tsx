@@ -12,6 +12,7 @@ import {
 import { formatCurrency, formatId } from '@/lib/utils';
 import Pagination from '@/components/shared/pagination';
 import DeleteDialog from '@/components/shared/delete-dialog';
+import { requireAdmin } from '@/lib/auth-guard';
 
 async function AdminProductPage(props: {
   searchParams: Promise<{
@@ -20,6 +21,7 @@ async function AdminProductPage(props: {
     category: string;
   }>;
 }) {
+  await requireAdmin();
   const searchParams = await props.searchParams;
 
   const page = Number(searchParams.page) || 1;
