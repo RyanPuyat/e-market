@@ -16,7 +16,7 @@ export const insertProductSchema = z.object({
   category: z.string().min(3, 'Category must be atleast 3 characters'),
   brand: z.string().min(3, 'Brand must be atleast 3 characters'),
   description: z.string().min(3, 'Description must be atleast 3 characters'),
-  stock: z.coerce.number(),
+  stock: z.coerce.number() as z.ZodNumber,
   images: z.array(z.string().min(1, 'Product must have atleast 1 image')),
   isFeatured: z.boolean(),
   banner: z.string().nullable(),
@@ -124,5 +124,12 @@ export const updateProfileSchema = z.object({
 
 //Schema for updating products
 export const updateProductSchema = insertProductSchema.extend({
-  id: z.string().min(1, 'Id is required'),
+  // id: z.string().min(1, 'Id is required'),
+  id: z.string().optional(),
 });
+
+// export const baseProductSchema = insertProductSchema.extend({
+//   id: z.string().optional(),
+// });
+
+export type ProductFormValues = z.infer<typeof updateProductSchema>;
