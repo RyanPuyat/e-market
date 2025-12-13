@@ -1,15 +1,11 @@
 'use client';
 
 import { productDefaultValues } from '@/lib/constants';
-import {
-  insertProductSchema,
-  ProductFormValues,
-  updateProductSchema,
-} from '@/lib/validators';
+import { insertProductSchema, updateProductSchema } from '@/lib/validators';
 import { Product } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { ControllerRenderProps, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 import {
@@ -24,6 +20,10 @@ import slugify from 'slugify';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
+import { createProduct, updateProduct } from '@/lib/actions/product.actions';
+import { UploadButton } from '@/lib/uploadthing';
+import { Card, CardContent } from '../ui/card';
+import Image from 'next/image';
 
 function ProductForm({
   type,
@@ -54,9 +54,48 @@ function ProductForm({
   //         : productDefaultValues,
   //   });
 
+  const onSubmit: SubmitHandler<z.infer<typeof insertProductSchema>> = async (
+    values
+  ) => {
+    //On create
+    if (type === 'Create') {
+      const res = await createProduct(values);
+
+      if (!res.success) {
+        toast.error(res.message);
+      } else {
+        toast.success(res.message);
+      }
+      router.push('/admin/products');
+    }
+
+    // On update
+    if (type === 'Update') {
+      if (!productId) {
+        router.push('/admin/products');
+        return;
+      }
+
+      const res = await updateProduct({ ...values, id: productId });
+
+      if (!res.success) {
+        toast.error(res.message);
+      } else {
+        toast.success(res.message);
+      }
+      router.push('/admin/product');
+    }
+  };
+
+  const images = form.watch('images');
+
   return (
     <Form {...form}>
-      <form className="space-y-8">
+      <form
+        method="POST"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8"
+      >
         <div className="flex flex-col md:flex-row gap-5">
           {/* Name */}
           {/* <FormField
@@ -203,7 +242,43 @@ function ProductForm({
           />
         </div>
         <div className="flex flex-col md:flex-row gap-5 upload-field">
-          {/* Images */}
+          <FormField
+            control={form.control}
+            name="images"
+            render={() => (
+              <FormItem className="w-full">
+                <FormLabel>Images</FormLabel>
+                <Card>
+                  <CardContent className="space-y-2 mt-2 min-h-48">
+                    <div className="flex-start space-x-2">
+                      {images.map((image: string) => (
+                        <Image
+                          key={image}
+                          src={image}
+                          alt="product image"
+                          className="w-20 h-20 object-cover object-center rounded-sm"
+                          width={100}
+                          height={100}
+                        />
+                      ))}
+                      <FormControl>
+                        <UploadButton
+                          endpoint="imageUploader"
+                          onClientUploadComplete={(res: { url: string }[]) => {
+                            form.setValue('images', [...images, res[0].url]);
+                          }}
+                          onUploadError={(error: Error) => {
+                            toast.error(`Error ${error.message}`);
+                          }}
+                        />
+                      </FormControl>
+                    </div>
+                  </CardContent>
+                </Card>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div className="upload-field">{/* Features */}</div>
         <div>
