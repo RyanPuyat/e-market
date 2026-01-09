@@ -84,7 +84,7 @@ function ProductForm({
       } else {
         toast.success(res.message);
       }
-      router.push('/admin/product');
+      router.push('/admin/products');
     }
   };
 
