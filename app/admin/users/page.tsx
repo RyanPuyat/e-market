@@ -58,7 +58,7 @@ async function AdminUSerPage(props: {
                   </TableCell>
                   <TableCell>
                     <Button asChild variant="outline" size="sm">
-                      <Link href={`admin/users/${user.id}`}>
+                      <Link href={`/admin/users/${user.id}`}>
                         <span className="px-2">Edit</span>
                       </Link>
                     </Button>

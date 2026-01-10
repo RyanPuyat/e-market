@@ -133,3 +133,10 @@ export const updateProductSchema = insertProductSchema.extend({
 // });
 
 export type ProductFormValues = z.infer<typeof updateProductSchema>;
+
+//Schema to update the user
+
+export const updateUserSchema = updateProfileSchema.extend({
+  id: z.string().min(1, 'Id is required'),
+  role: z.string().min(1, 'Role is required').nullable(),
+});
