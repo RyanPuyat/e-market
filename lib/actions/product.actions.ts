@@ -6,6 +6,7 @@ import { convertToPlainObject, formatError } from '../utils';
 import { revalidatePath } from 'next/cache';
 import { insertProductSchema, updateProductSchema } from '../validators';
 import z from 'zod';
+import { Prisma } from '@prisma/client';
 
 //Get latestProducts
 export async function getLatestProducts() {
@@ -48,13 +49,32 @@ export async function getAllProducts({
   limit?: number;
   category?: string;
 }) {
+  // console.log('Query:', query);
+  const where: Prisma.ProductWhereInput = {};
+
+  // Apply search filter
+  if (query && query.trim() !== '') {
+    where.OR = [
+      { name: { contains: query, mode: 'insensitive' } },
+      { category: { contains: query, mode: 'insensitive' } },
+      // add description if your model has it
+      { description: { contains: query, mode: 'insensitive' } },
+    ];
+  }
+
+  // Apply category filter
+  if (category && category.trim() !== '') {
+    where.category = category;
+  }
+
   const data = await prisma.product.findMany({
+    where,
     orderBy: { createdAt: 'desc' },
     skip: (page - 1) * limit,
     take: limit,
   });
 
-  const dataCount = await prisma.product.count();
+  const dataCount = await prisma.product.count({ where });
   return {
     data,
     totalPages: Math.ceil(dataCount / limit),
