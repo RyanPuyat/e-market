@@ -19,7 +19,7 @@ function ProductCarousel({ data }: { data: Product[] }) {
       opts={{ loop: true }}
       plugins={[
         Autoplay({
-          delay: 10000,
+          delay: 2000,
           stopOnInteraction: true,
           stopOnMouseEnter: true,
         }),

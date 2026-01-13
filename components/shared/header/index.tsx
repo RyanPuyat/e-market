@@ -4,6 +4,7 @@ import { APP_NAME } from '@/lib/constants';
 // import Menu from './menu';
 import MenuWrapper from './menu-wrapper';
 import CategoryDrawer from './category-drawer';
+import Search from './search';
 
 function Header() {
   return (
@@ -20,6 +21,9 @@ function Header() {
               priority={true}
             />
           </Link>
+        </div>
+        <div className="hidden md:block">
+          <Search />
         </div>
         <MenuWrapper />
       </div>
