@@ -55,22 +55,34 @@ export async function getAllProducts({
   rating?: string;
   sort?: string;
 }) {
-  const where: Prisma.ProductWhereInput = {};
+  // const where: Prisma.ProductWhereInput = {};
 
-  // Apply search filter
-  if (query && query.trim() !== 'all') {
-    where.OR = [
-      { name: { contains: query, mode: 'insensitive' } },
-      { category: { contains: query, mode: 'insensitive' } },
-      // add description if your model has it
-      { description: { contains: query, mode: 'insensitive' } },
-    ];
-  }
+  // // Apply search filter
+  // if (query && query.trim() !== 'all') {
+  //   where.OR = [
+  //     { name: { contains: query, mode: 'insensitive' } },
+  //     { category: { contains: query, mode: 'insensitive' } },
+  //     // add description if your model has it
+  //     { description: { contains: query, mode: 'insensitive' } },
+  //   ];
+  // }
 
-  // Apply category filter
-  if (category && category.trim() !== 'all') {
-    where.category = category;
-  }
+  // // Apply category filter
+  // if (category && category.trim() !== 'all') {
+  //   where.category = category;
+  // }
+
+  const queryFilter: Prisma.ProductWhereInput =
+    query && query !== 'all'
+      ? {
+          name: {
+            contains: query,
+            mode: 'insensitive',
+          } as Prisma.StringFilter,
+        }
+      : {};
+
+  const categoryFilter = category && category !== 'all' ? { category } : {};
 
   const priceFilter: Prisma.ProductWhereInput =
     price && price !== 'all'
@@ -95,6 +107,8 @@ export async function getAllProducts({
 
   const data = await prisma.product.findMany({
     where: {
+      ...categoryFilter,
+      ...queryFilter,
       ...priceFilter,
       ...ratingFilter,
     },
@@ -103,7 +117,7 @@ export async function getAllProducts({
     take: limit,
   });
 
-  const dataCount = await prisma.product.count({ where });
+  const dataCount = await prisma.product.count();
   return {
     data,
     totalPages: Math.ceil(dataCount / limit),
