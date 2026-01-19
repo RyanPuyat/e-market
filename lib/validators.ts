@@ -1,12 +1,13 @@
 import { z } from 'zod';
 import { formatNumberWithDecimal } from './utils';
 import { PAYMENT_METHODS } from './constants';
+import { title } from 'process';
 
 const currency = z
   .string()
   .refine(
     (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
-    'Price must have exactly two decimal places'
+    'Price must have exactly two decimal places',
   );
 
 // Schema for inserting products
@@ -139,4 +140,18 @@ export type ProductFormValues = z.infer<typeof updateProductSchema>;
 export const updateUserSchema = updateProfileSchema.extend({
   id: z.string().min(1, 'Id is required'),
   role: z.string().min(1, 'Role is required').nullable(),
+});
+
+//Schema to insert reviews
+
+export const insertReviewSchema = z.object({
+  title: z.string().min(3, 'Title must be atleast 3 characters'),
+  description: z.string().min(3, 'Description must be atleast 3 characters'),
+  productId: z.string().min(1, 'Product is required'),
+  userId: z.string().min(1, 'User is required'),
+  rating: z.coerce
+    .number()
+    .int()
+    .min(1, 'Rating must be atleast 1')
+    .max(1, 'Rating must be atleast 5'),
 });
