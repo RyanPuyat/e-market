@@ -3,6 +3,7 @@ import { Review } from '@/types';
 import { Divide } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import ReviewForm from './review-form';
 
 function ReviewList({
   userId,
@@ -19,7 +20,7 @@ function ReviewList({
     <div className="space-y-4">
       {reviews.length === 0 && <div>No reviews yet</div>}
       {userId ? (
-        <>{/* Review Form here */}</>
+        <ReviewForm userId={userId} productId={productId} />
       ) : (
         <div>
           Please{' '}
