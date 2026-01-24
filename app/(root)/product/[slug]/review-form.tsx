@@ -122,9 +122,13 @@ function ReviewForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Rating</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
+                    {/* <Select
+                      onValueChange={(val)} => {field.onChange(Number(val))}
                       value={field.value?.toString()}
+                    > */}
+                    <Select
+                      onValueChange={(val) => field.onChange(Number(val))} // ✅ convert to number
+                      value={field.value?.toString()} // keep string for Select UI
                     >
                       <FormControl>
                         <SelectTrigger>
