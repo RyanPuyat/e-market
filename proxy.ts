@@ -12,7 +12,7 @@ const protectedRoutes = [
   /\/admin/,
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const sessionCartId = request.cookies.get('sessionCartId')?.value;
 
   if (!sessionCartId) {
@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
     return response;
   }
   const isProtected = protectedRoutes.some((route) =>
-    route.test(request.nextUrl.pathname)
+    route.test(request.nextUrl.pathname),
   );
 
   if (isProtected && !(await isAuthenticated(request))) {
