@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { getOrderById } from '@/lib/actions/order.actions';
 import { notFound } from 'next/navigation';
-import OrderDetailsTable from '@/components/shared/place-order/order-details-table';
+import OrderDetailsTable from '@/app/(root)/order/[id]/order-details-table';
 import { ShippingAddress } from '@/types';
 // import { requireAdmin } from '@/lib/auth-guard';
 import { auth } from '@/lib/auth';

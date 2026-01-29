@@ -1,4 +1,4 @@
-import CheckoutSteps from '@/components/shared/cart/checkout-steps';
+import CheckoutSteps from '@/components/shared/checkout-steps';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -18,7 +18,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import PlaceOrderForm from '@/components/shared/place-order/place-order-form';
+import PlaceOrderForm from '@/app/(root)/place-order/place-order-form';
 
 export const metadata: Metadata = {
   title: 'Place Order',

@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { auth } from '@/lib/auth';
 import { getUserById } from '@/lib/actions/user.actions';
-import PaymentMethodForm from '@/components/shared/payment-method/payment-method-form';
-import CheckoutSteps from '@/components/shared/cart/checkout-steps';
+import PaymentMethodForm from '@/app/(root)/payment-method/payment-method-form';
+import CheckoutSteps from '@/components/shared/checkout-steps';
 
 export const metadata: Metadata = {
   title: 'Select Payment Method',
