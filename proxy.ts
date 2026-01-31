@@ -23,7 +23,8 @@ export async function proxy(request: NextRequest) {
     response.cookies.set('sessionCartId', newSessionCartId, {
       path: '/',
       httpOnly: true,
-      secure: true,
+      // secure: true,
+      secure: process.env.NODE_ENV === 'production',
     });
 
     return response;
