@@ -162,7 +162,7 @@ export async function createPaypalOrder(orderId: string) {
 //Aprroved paypal order and update order to paid
 export async function approvePayPalOrder(
   orderId: string,
-  data: { orderID: string }
+  data: { orderID: string },
 ) {
   try {
     //Get order from database
@@ -209,7 +209,7 @@ export async function approvePayPalOrder(
 }
 
 //Update order to paid
-async function updateOrderToPaid({
+export async function updateOrderToPaid({
   orderId,
   paymentResult,
 }: {
