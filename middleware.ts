@@ -43,28 +43,79 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import { isAuthenticated } from '@/lib/auth-check';
+
+const protectedRoutes = [
+  /\/shipping-address/,
+  /\/payment-method/,
+  /\/place-order/,
+  /\/profile/,
+  /\/user\/(.*)/,
+  /\/order\/(.*)/,
+  /\/admin/,
+];
+
+function isAuthRoute(pathname: string) {
+  return (
+    pathname.startsWith('/api/auth') ||
+    pathname === '/sign-in' ||
+    pathname.startsWith('/_next') ||
+    pathname === '/favicon.ico'
+  );
+}
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  const pathname = request.nextUrl.pathname;
 
-  if (!token) return NextResponse.redirect(new URL('/sign-in', request.url));
+  // safety: don't intercept auth or static routes
+  if (isAuthRoute(pathname)) return NextResponse.next();
 
-  const response = NextResponse.next();
+  // only run auth logic for protected routes
+  const isProtected = protectedRoutes.some((r) => r.test(pathname));
+  if (!isProtected) return NextResponse.next();
 
-  if (!request.cookies.get('sessionCartId')) {
-    response.cookies.set('sessionCartId', crypto.randomUUID(), {
+  // ensure sessionCartId exists and set it on the response we return
+  const sessionCartId = request.cookies.get('sessionCartId')?.value;
+  if (!sessionCartId) {
+    const id = crypto.randomUUID();
+    const res = NextResponse.next();
+    res.cookies.set('sessionCartId', id, {
       path: '/',
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
     });
+    // debug header
+    res.headers.set('x-debug-sessionCart', 'created');
+    return res;
   }
 
-  return response;
+  // check auth safely
+  let auth = false;
+  try {
+    auth = await isAuthenticated(request);
+  } catch (err) {
+    console.error('isAuthenticated error', err);
+    auth = false;
+  }
+
+  const res = NextResponse.next();
+  res.headers.set('x-debug-auth', auth ? 'true' : 'false');
+
+  if (!auth) {
+    const redirectRes = NextResponse.redirect(new URL('/sign-in', request.url));
+    // if you need to preserve sessionCartId on redirect, set it here too
+    redirectRes.cookies.set('sessionCartId', sessionCartId, {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+    redirectRes.headers.set('x-debug-redirect', 'true');
+    return redirectRes;
+  }
+
+  return res;
 }
 
 export const config = {

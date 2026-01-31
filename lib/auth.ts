@@ -36,7 +36,7 @@ const authConfig = {
         if (user && user.password) {
           const isMatch = compareSync(
             credentials.password as string,
-            user.password
+            user.password,
           );
           //If password is correct, return the user
           if (isMatch) {
@@ -53,6 +53,7 @@ const authConfig = {
       },
     }),
   ],
+
   /* eslint-disable @typescript-eslint/no-explicit-any */
   callbacks: {
     async session({ session, user, trigger, token }: any) {
