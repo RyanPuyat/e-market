@@ -47,7 +47,8 @@ function StripePayment({
         .confirmPayment({
           elements,
           confirmParams: {
-            return_url: `${APP_SERVER_URL}/order/${orderId}/stripe-payment-success`,
+            // return_url: `${APP_SERVER_URL}/order/${orderId}/stripe-payment-success`,
+            return_url: `${process.env.NEXT_AUTH}/order/${orderId}/stripe-payment-success`,
           },
         })
         .then(({ error }) => {
