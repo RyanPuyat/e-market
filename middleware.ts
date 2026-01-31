@@ -43,26 +43,25 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { isAuthenticated } from '@/lib/auth-check';
+import { getToken } from 'next-auth/jwt';
 
 export async function middleware(request: NextRequest) {
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  if (!token) return NextResponse.redirect(new URL('/sign-in', request.url));
+
   const response = NextResponse.next();
 
-  const sessionCartId = request.cookies.get('sessionCartId')?.value;
-
-  if (!sessionCartId) {
+  if (!request.cookies.get('sessionCartId')) {
     response.cookies.set('sessionCartId', crypto.randomUUID(), {
       path: '/',
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
     });
-  }
-
-  const isAuth = await isAuthenticated(request);
-
-  if (!isAuth) {
-    return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
   return response;
