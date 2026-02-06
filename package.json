@@ -9,7 +9,8 @@
     "lint": "eslint",
     "postinstall": "prisma generate",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "email": "copy .env .\\node_modules\\react-email && email dev --dir ./app/email --port 3001"
   },
   "dependencies": {
     "-": "^0.0.1",
@@ -60,6 +61,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@prisma/client": "^6.18.0",
+    "@react-email/preview-server": "^5.2.5",
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.19.25",

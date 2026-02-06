@@ -15,10 +15,14 @@ import {
   Text,
 } from '@react-email/components';
 import sampleData from '@/db/sample-data';
+import dotenv from 'dotenv';
+import { randomUUID } from 'crypto';
+
+dotenv.config();
 
 PurchaseReceiptEmail.PreviewProps = {
   order: {
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     userId: '123',
     user: {
       name: 'John Doe',
